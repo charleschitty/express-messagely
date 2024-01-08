@@ -77,6 +77,23 @@ class User {
    *          last_login_at } */
 
   static async get(username) {
+    console.log("running User.get", username);
+    const result = await db.query(`
+      SELECT username,
+             first_name,
+             last_name,
+             phone,
+             join_at,
+             last_login_at
+        FROM users
+        WHERE username = $1;`,
+      [username]);
+    const user = result.rows[0];
+    console.log("user in User.get: ", user);
+
+    if (!user) throw new NotFoundError(`No such user: ${username}`);
+
+    return user;
   }
 
   /** Return messages from this user.
