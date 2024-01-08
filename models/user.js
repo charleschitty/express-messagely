@@ -23,7 +23,7 @@ class User {
           ($1, $2, $3, $4, $5, current_timestamp)
         RETURNING username, password, first_name, last_name, phone`,
       [username, hashedPassword, first_name, last_name, phone]);
-    return res.json(result.rows[0]);
+    return result.rows[0];
   }
 
   /** Authenticate: is username/password valid? Returns boolean. */
