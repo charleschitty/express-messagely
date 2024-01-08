@@ -117,22 +117,24 @@ class User {
          FROM messages AS m
                 JOIN users AS u ON m.to_username = u.username
          WHERE m.from_username = $1`,
-    [username]);
+      [username]);
 
     let messages = result.rows;
 
     if (!messages) throw new NotFoundError(`No such user: ${username}`);
 
-    return messages.map(m => ({id: m.id,
-                              to_user: {
-                                username: m.to_username,
-                                first_name: m.to_first_name,
-                                last_name: m.to_last_name,
-                                phone: m.to_phone,
-                              },
-                              body: m.body,
-                              sent_at: m.sent_at,
-                              read_at: m.read_at})
+    return messages.map(m => ({
+      id: m.id,
+      to_user: {
+        username: m.to_username,
+        first_name: m.to_first_name,
+        last_name: m.to_last_name,
+        phone: m.to_phone,
+      },
+      body: m.body,
+      sent_at: m.sent_at,
+      read_at: m.read_at
+    })
     );
   }
 
@@ -157,24 +159,26 @@ class User {
          FROM messages AS m
                 JOIN users AS u ON m.from_username = u.username
          WHERE m.to_username = $1`,
-    [username]);
+      [username]);
 
     let messages = result.rows;
 
     if (!messages) throw new NotFoundError(`No such user: ${username}`);
 
-    return messages.map(m => ({id: m.id,
-                              from_user: {
-                                username: m.from_username,
-                                first_name: m.from_first_name,
-                                last_name: m.from_last_name,
-                                phone: m.from_phone,
-                              },
-                              body: m.body,
-                              sent_at: m.sent_at,
-                              read_at: m.read_at})
+    return messages.map(m => ({
+      id: m.id,
+      from_user: {
+        username: m.from_username,
+        first_name: m.from_first_name,
+        last_name: m.from_last_name,
+        phone: m.from_phone,
+      },
+      body: m.body,
+      sent_at: m.sent_at,
+      read_at: m.read_at
+    })
     );
-  }''
+  } '';
 };
 
 
