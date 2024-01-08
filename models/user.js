@@ -152,7 +152,7 @@ class User {
               m.from_username,
               u.first_name AS from_first_name,
               u.last_name AS from_last_name,
-              u.phone AS from_to_phone,
+              u.phone AS from_phone,
               m.body,
               m.sent_at,
               m.read_at
@@ -171,7 +171,7 @@ class User {
         username: m.from_username,
         first_name: m.from_first_name,
         last_name: m.from_last_name,
-        phone: m.from_to_phone,
+        phone: m.from_phone,
       },
       body: m.body,
       sent_at: m.sent_at,
