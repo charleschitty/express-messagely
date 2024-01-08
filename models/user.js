@@ -29,7 +29,6 @@ class User {
   /** Authenticate: is username/password valid? Returns boolean. */
 
   static async authenticate(username, password) {
-
     const result = await db.query(
       `SELECT password
           FROM users
@@ -44,6 +43,15 @@ class User {
   /** Update last_login_at for user */
 
   static async updateLoginTimestamp(username) {
+    const result = await db.query(
+      `UPDATE users
+          SET last_login_at = current_timestamp
+              WHERE username = $1
+              RETURNING username`
+      [username]);
+    const user = result.rows[0];
+
+    if (!user) throw new NotFoundError(`No such user: ${username}`);
   }
 
   /** All: basic info on all users:
