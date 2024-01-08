@@ -47,7 +47,7 @@ class User {
       `UPDATE users
           SET last_login_at = current_timestamp
               WHERE username = $1
-              RETURNING username`
+              RETURNING username`,
       [username]);
     const user = result.rows[0];
 
