@@ -23,6 +23,18 @@ CREATE TABLE messages (
   sent_at TIMESTAMP WITH TIME ZONE NOT NULL,
   read_at TIMESTAMP WITH TIME ZONE);
 
+INSERT INTO users (username, password, first_name, last_name, phone, join_at)
+  VALUES
+    ('test', 'password', 'Test', 'McTest', '+14155550000', current_timestamp),
+    ('joel', 'password', 'Joel', 'Burton', '+14155551212', current_timestamp);
+
+
+INSERT INTO messages (from_username, to_username, body, sent_at)
+    VALUES
+      ('test', 'joel', 'test-to-joel', current_timestamp),
+      ('test', 'joel', 'test-to-joel2', current_timestamp),
+      ('joel', 'test', 'joel-to-test', current_timestamp),
+      ('joel', 'test', 'joel-to-test2', current_timestamp);
 
 \echo 'Delete and recreate messagely_test db?'
 \prompt 'Return for yes or control-C to cancel > ' foo
