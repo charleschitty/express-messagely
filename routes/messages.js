@@ -1,7 +1,8 @@
 "use strict";
 
 const Message = require("../models/message");
-const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
+const { ensureLoggedIn } = require("../middleware/auth");
+const { UnauthorizedError } = require("../expressError");
 
 const Router = require("express").Router;
 const router = new Router();
@@ -19,6 +20,17 @@ const router = new Router();
  *
  **/
 
+router.get("/:id", ensureLoggedIn, async function (req, res, next) {
+  const username = res.locals.user.username;
+  const message = await Message.get(req.params.id);
+
+  if (message.from_user.username === username
+    || message.to_user.username === username) {
+    return res.json({ message });
+  } else {
+    throw new UnauthorizedError("Unable to read message");
+  }
+});
 
 /** POST / - post message.
  *
