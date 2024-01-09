@@ -2,7 +2,7 @@
 
 const Message = require("../models/message");
 const { ensureLoggedIn } = require("../middleware/auth");
-const { UnauthorizedError } = require("../expressError");
+const { UnauthorizedError, BadRequestError } = require("../expressError");
 
 const Router = require("express").Router;
 const router = new Router();
@@ -39,6 +39,15 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
  *
  **/
 
+router.post("/", ensureLoggedIn, async function(req, res, next){
+  if (!req.body) throw BadRequestError();
+  const username = res.locals.user.username;
+  const toUsername = req.body.to_username;
+  const body = req.body.body;
+  const message = await Message.create({ username, toUsername, body });
+  res.json( { message });
+});
+
 
 /** POST/:id/read - mark message as read:
  *
@@ -47,6 +56,17 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
  * Makes sure that the only the intended recipient can mark as read.
  *
  **/
+
+router.post("/:id/read", ensureLoggedIn, async function (req, res, next){
+  const username = res.locals.user.username;
+  const message = await Message.get(req.params.id);
+  if (message.to_user.username === username){
+    const readMessage = await Message.markRead(req.params.id);
+    res.json( { message: readMessage });
+  } else {
+    throw new UnauthorizedError("Unable to mark message as read");
+  };
+});
 
 
 module.exports = router;
