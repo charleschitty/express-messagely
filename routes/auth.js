@@ -9,11 +9,11 @@ const { SECRET_KEY } = require("../config");
 
 /** POST /login: {username, password} => {token} */
 
-router.post("/login", async function (req, res){
+router.post("/login", async function (req, res) {
   if (req.body === undefined) throw new BadRequestError();
   const { username, password } = req.body;
 
-  if (await User.authenticate(username, password)){ //FIXME:  ===true (explicit = more secure)
+  if (await User.authenticate(username, password) === true) {
     User.updateLoginTimestamp(username);
     const token = jwt.sign({ username }, SECRET_KEY);
     return res.json({ token });
@@ -29,11 +29,11 @@ router.post("/login", async function (req, res){
  * {username, password, first_name, last_name, phone} => {token}.
  */
 
-router.post("/register", async function(req, res){
+router.post("/register", async function (req, res) {
   if (req.body === undefined) throw new BadRequestError();
   const { username } = await User.register(req.body);
   User.updateLoginTimestamp(username);
-  const token = jwt.sign( { username }, SECRET_KEY);
+  const token = jwt.sign({ username }, SECRET_KEY);
   return res.json({ token });
 });
 
