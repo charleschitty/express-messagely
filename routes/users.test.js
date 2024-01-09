@@ -154,6 +154,29 @@ describe("User Message Routes tests", function () {
       body: "u2-to-u1",
     });
   });
+
+  describe("GET /users/:username/to tests", function () {
+    test("getting messages sent to a user", async function () {
+      const response = await request(app)
+        .get(`/users/${user1.username}/to`)
+        .send({ _token: testUser1Token });
+
+      expect(response.body).toEqual({
+        messages: [{
+          id: expect.any(Number),
+          body: "u2-to-u1",
+          sent_at: expect.any(String),
+          read_at: null,
+          from_user: {
+            username: "test2",
+            first_name: "Test2",
+            last_name: "McTest2",
+            phone: "+14155551234"
+          }
+        }]
+      });
+    });
+  });
 });
 
 afterAll(async function () {
