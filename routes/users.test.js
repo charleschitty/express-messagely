@@ -64,6 +64,13 @@ describe("User Routes tests", function () {
         ]
       });
     });
+
+    test("test response if no token sent", async function () {
+      let response = await request(app)
+        .get("/users");
+
+      expect(response.status).toEqual(401);
+    });
   });
 
 });
