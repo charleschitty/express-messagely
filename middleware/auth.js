@@ -33,10 +33,11 @@ function ensureLoggedIn(req, res, next) {
 /** Middleware: Requires user is user for route. */
 
 function ensureCorrectUser(req, res, next) {
+  console.log("res.locals.user: ", res.locals.user);
   const currentUser = res.locals.user;
   const hasUnauthorizedUsername = currentUser?.username !== req.params.username;
-
-  if (!currentUser || hasUnauthorizedUsername){
+  console.log("hasUnauthorizedname: ", hasUnauthorizedUsername);
+  if (!currentUser || hasUnauthorizedUsername) {
     throw new UnauthorizedError();
   }
 
