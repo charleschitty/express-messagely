@@ -1,8 +1,10 @@
 "use strict";
 
-const Router = require("express").Router;
-const router = new Router();
+const { Router } = require("express");
+const User = require("../models/user");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 
+const router = new Router();
 
 /** GET / - get list of users.
  *
@@ -10,6 +12,10 @@ const router = new Router();
  *
  **/
 
+router.get("/", async function (req, res, next) {
+  const users = await User.all();
+  return res.json(users);
+});
 
 /** GET /:username - get detail of users.
  *
