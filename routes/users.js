@@ -39,9 +39,7 @@ router.get("/:username", ensureCorrectUser, async function (req, res, next) {
  **/
 
 router.get("/:username/to", ensureCorrectUser, async function (req, res, next) {
-  console.log(req.params.username);
   const messages = await User.messagesTo(req.params.username);
-  console.log(messages);
   return res.json({ messages });
 });
 
@@ -55,10 +53,8 @@ router.get("/:username/to", ensureCorrectUser, async function (req, res, next) {
  *
  **/
 
-router.get("/:username/from", ensureCorrectUser, async function (res, req, next) {
-  // console.log("req.params.username: ", req.params.username);
+router.get("/:username/from", ensureCorrectUser, async function (req, res, next) {
   const messages = await User.messagesFrom(req.params.username);
-  // console.log("messages: ", messages);
   return res.json({ messages });
 });
 
