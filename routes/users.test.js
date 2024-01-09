@@ -15,8 +15,8 @@ describe("User Routes tests", function () {
   let testUser2Token;
 
   beforeEach(async function () {
-    await db.query("DELETE FROM users");
     await db.query("DELETE FROM messages");
+    await db.query("DELETE FROM users");
 
     const user1 = await User.register({
       username: "test1",
@@ -34,7 +34,7 @@ describe("User Routes tests", function () {
       phone: "+14155551234",
     });
 
-    testUser1Token = jwt.sign({ username: user1.username }, SECRET_KEY);
+    testUser1Token = jwt.sign({ username: "test1" }, SECRET_KEY);
     testUser2Token = jwt.sign({ username: user2.username }, SECRET_KEY);
   });
 
