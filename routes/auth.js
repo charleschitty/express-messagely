@@ -11,11 +11,13 @@ const { SECRET_KEY } = require("../config");
 
 router.post("/login", async function (req, res){
   if (req.body === undefined) throw new BadRequestError();
-  const { username, password } = req.body;``
-  if (await User.authenticate(username, password)){
+  const { username, password } = req.body;
+
+  if (await User.authenticate(username, password)){ //FIXME:  ===true (explicit = more secure)
     User.updateLoginTimestamp(username);
     const token = jwt.sign({ username }, SECRET_KEY);
     return res.json({ token });
+
   } else {
     throw new UnauthorizedError();
   };
@@ -29,7 +31,8 @@ router.post("/login", async function (req, res){
 
 router.post("/register", async function(req, res){
   if (req.body === undefined) throw new BadRequestError();
-  const { username } = await User.register(req.body)
+  const { username } = await User.register(req.body);
+  User.updateLoginTimestamp(username);
   const token = jwt.sign( { username }, SECRET_KEY);
   return res.json({ token });
 });
