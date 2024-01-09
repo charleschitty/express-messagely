@@ -24,12 +24,11 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
   const username = res.locals.user.username;
   const message = await Message.get(req.params.id);
 
-  if (message.from_user.username === username
-    || message.to_user.username === username) { //Note: check if not right username !== (security fail first)
-    return res.json({ message });
-  } else {
-    throw new UnauthorizedError("Unable to read message");
+  if (message.from_user.user !== username && message.to_user.username !== username) {
+    throw new UnauthorizedError("Unable to read message.");
   }
+
+  return res.json({ message });
 });
 
 /** POST / - post message.
@@ -39,13 +38,13 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
  *
  **/
 
-router.post("/", ensureLoggedIn, async function(req, res, next){
+router.post("/", ensureLoggedIn, async function (req, res, next) {
   if (!req.body) throw BadRequestError();
   const username = res.locals.user.username;
   const toUsername = req.body.to_username;
   const body = req.body.body;
   const message = await Message.create({ username, toUsername, body }); //Destructuring in our message model (database); structuring in our route
-  return res.json( { message });
+  return res.json({ message });
 });
 
 
@@ -57,15 +56,16 @@ router.post("/", ensureLoggedIn, async function(req, res, next){
  *
  **/
 
-router.post("/:id/read", ensureLoggedIn, async function (req, res, next){
+router.post("/:id/read", ensureLoggedIn, async function (req, res, next) {
   const username = res.locals.user.username;
   const message = await Message.get(req.params.id);
-  if (message.to_user.username === username){
-    const readMessage = await Message.markRead(req.params.id); //FIXME: fail first (coding hygiene)
-    return res.json( { message: readMessage });
-  } else {
-    throw new UnauthorizedError("Unable to mark message as read");
-  };
+
+  if (message.to_user.username !== username) {
+    throw new UnauthorizedError("Unable to mark message as read.");
+  }
+
+  const readMessage = await Message.markRead(req.params.id);
+  return res.json({ message: readMessage });
 });
 
 
