@@ -1,7 +1,7 @@
 "use strict";
 
-const { Router } = require("express");
 const User = require("../models/user");
+const { Router } = require("express");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 
 const router = new Router();
@@ -12,9 +12,9 @@ const router = new Router();
  *
  **/
 
-router.get("/", async function (req, res, next) {
+router.get("/", ensureLoggedIn, async function (req, res, next) {
   const users = await User.all();
-  return res.json(users);
+  return res.json({ users });
 });
 
 /** GET /:username - get detail of users.
@@ -23,6 +23,10 @@ router.get("/", async function (req, res, next) {
  *
  **/
 
+router.get("/:username", ensureCorrectUser, async function (req, res, next) {
+  const user = User.get(req.params.username);
+  return res.json({ user });
+});
 
 /** GET /:username/to - get messages to user
  *
