@@ -1,5 +1,8 @@
 "use strict";
 
+const Message = require("../models/message");
+const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
+
 const Router = require("express").Router;
 const router = new Router();
 
