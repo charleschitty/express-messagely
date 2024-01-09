@@ -24,7 +24,7 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
   const username = res.locals.user.username;
   const message = await Message.get(req.params.id);
 
-  if (message.from_user.user !== username && message.to_user.username !== username) {
+  if (message.from_user.username !== username && message.to_user.username !== username) {
     throw new UnauthorizedError("Unable to read message.");
   }
 

@@ -21,6 +21,7 @@ describe("Message Routes tests", function () {
   beforeEach(async function () {
     await db.query("DELETE FROM messages");
     await db.query("DELETE FROM users");
+    await db.query("ALTER SEQUENCE messages_id_seq RESTART WITH 1");
 
     user1 = await User.register({
       username: "test1",
@@ -52,6 +53,79 @@ describe("Message Routes tests", function () {
       to_username: "test1",
       body: "u2-to-u1",
     });
+  });
+
+  describe("GET /:id tests", function () {
+    test("shows message details as sending user", async function () {
+      let response = await request(app)
+        .get(`/messages/${m1.id}`)
+        .send({ _token: testUser1Token });
+
+      expect(response.body).toEqual({
+        message: {
+          id: 1,
+          body: "u1-to-u2",
+          sent_at: expect.any(String),
+          read_at: null, //Why no || expect...
+          from_user: {
+            username:"test1",
+            first_name: "Test1",
+            last_name: "Testy1",
+            phone: "+14155550000"
+          },
+          to_user: {
+            username: "test2",
+            first_name: "Test2",
+            last_name: "McTest2",
+            phone:"+14155551234"
+          },
+        }
+      });
+      expect(response.status).toEqual(200);
+    });
+
+    test("shows message details as sent to user", async function () {
+      let response = await request(app)
+        .get(`/messages/${m1.id}`)
+        .send({ _token: testUser2Token });
+
+      expect(response.body).toEqual({
+        message: {
+          id: 1,
+          body: "u1-to-u2",
+          sent_at: expect.any(String),
+          read_at: null,
+          from_user: {
+            username:"test1",
+            first_name: "Test1",
+            last_name: "Testy1",
+            phone: "+14155550000"
+          },
+          to_user: {
+            username: "test2",
+            first_name: "Test2",
+            last_name: "McTest2",
+            phone:"+14155551234"
+          },
+        }
+      });
+      expect(response.status).toEqual(200);
+    });
+
+    test("test response if different user token sent", async function () {
+      let response = await request(app)
+        .get(`/messages/${m1.id}`)
+        .send({ _token: "WRONG" });
+
+      expect(response.status).toEqual(401);
+    });
+  });
+
+  test("test response if no token sent", async function () {
+    let response = await request(app)
+      .get(`/messages/${m1.id}`);
+
+    expect(response.status).toEqual(401);
   });
 });
 

@@ -40,11 +40,6 @@ describe("User Routes tests", function () {
     testUser2Token = jwt.sign({ username: user2.username }, SECRET_KEY);
   });
 
-  /**GET /users
-   * Returns an object with an array of User objects
-   *  - { users: [User], [User], ...}
-   */
-
   describe("GET /users tests", function () {
     test("shows a list of all users", async function () {
       let response = await request(app)
