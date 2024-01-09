@@ -61,7 +61,7 @@ class User {
     const result = await db.query(
       `SELECT username, first_name, last_name
           FROM users
-          ORDER BY username;`
+          ORDER BY username`
     );
 
     return result.rows;
@@ -86,7 +86,7 @@ class User {
              join_at,
              last_login_at
         FROM users
-        WHERE username = $1;`,
+        WHERE username = $1`,
       [username]);
     const user = result.rows[0];
     console.log("user in User.get: ", user);
@@ -121,7 +121,11 @@ class User {
 
     let messages = result.rows;
 
+    // FIXME: Checking if the user exists first could error handling before running query
+    // would need separate query to check if user exists
+
     if (!messages) throw new NotFoundError(`No such user: ${username}`);
+    // This (!messages) empty array is not an error if a user does not have messages
 
     return messages.map(m => ({
       id: m.id,
@@ -163,6 +167,8 @@ class User {
 
     let messages = result.rows;
 
+    // FIXME: Error handling before running query
+    // would need separate query to check if user exists
     if (!messages) throw new NotFoundError(`No such user: ${username}`);
 
     return messages.map(m => ({
