@@ -124,7 +124,7 @@ class User {
     // FIXME: Checking if the user exists first could error handling before running query
     // would need separate query to check if user exists
 
-    if (!messages) throw new NotFoundError(`No such user: ${username}`);
+    // if (!messages) throw new NotFoundError(`No such user: ${username}`);
     // This (!messages) empty array is not an error if a user does not have messages
 
     return messages.map(m => ({
@@ -169,7 +169,7 @@ class User {
 
     // FIXME: Error handling before running query
     // would need separate query to check if user exists
-    if (!messages) throw new NotFoundError(`No such user: ${username}`);
+    // if (!messages) throw new NotFoundError(`No such user: ${username}`);
 
     return messages.map(m => ({
       id: m.id,
@@ -184,7 +184,7 @@ class User {
       read_at: m.read_at
     })
     );
-  } '';
+  };
 };
 
 
