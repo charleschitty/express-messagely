@@ -36,7 +36,7 @@ describe("User Routes tests", function () {
       phone: "+14155551234",
     });
 
-    testUser1Token = jwt.sign({ username: "test1" }, SECRET_KEY);
+    testUser1Token = jwt.sign({ username: user1.username }, SECRET_KEY);
     testUser2Token = jwt.sign({ username: user2.username }, SECRET_KEY);
   });
 
@@ -92,7 +92,7 @@ describe("User Routes tests", function () {
         }
       });
       expect(response.status).toEqual(200);
-    })
+    });
 
     test("test response if different user token sent", async function () {
       let response = await request(app)
@@ -100,16 +100,16 @@ describe("User Routes tests", function () {
         .send({ _token: testUser2Token });
 
       expect(response.status).toEqual(401);
-    })
-    });
-
-    test("test response if no token sent", async function () {
-      let response = await request(app)
-        .get(`/users/${user1.username}`);
-
-      expect(response.status).toEqual(401);
     });
   });
+
+  test("test response if no token sent", async function () {
+    let response = await request(app)
+      .get(`/users/${user1.username}`);
+
+    expect(response.status).toEqual(401);
+  });
+});
 
 describe("User Message Routes tests", function () {
   let testUser1Token;
@@ -139,7 +139,7 @@ describe("User Message Routes tests", function () {
       phone: "+14155551234",
     });
 
-    testUser1Token = jwt.sign({ username: "test1" }, SECRET_KEY);
+    testUser1Token = jwt.sign({ username: user1.username }, SECRET_KEY);
     testUser2Token = jwt.sign({ username: user2.username }, SECRET_KEY);
 
     m1 = await Message.create({
