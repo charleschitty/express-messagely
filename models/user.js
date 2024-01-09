@@ -77,7 +77,6 @@ class User {
    *          last_login_at } */
 
   static async get(username) {
-    console.log("running User.get", username);
     const result = await db.query(`
       SELECT username,
              first_name,
@@ -89,7 +88,6 @@ class User {
         WHERE username = $1`,
       [username]);
     const user = result.rows[0];
-    console.log("user in User.get: ", user);
 
     if (!user) throw new NotFoundError(`No such user: ${username}`);
 
